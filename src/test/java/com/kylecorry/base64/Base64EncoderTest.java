@@ -11,9 +11,9 @@ public class Base64EncoderTest {
 
     @Test
     public void testEncodingString(){
-        assertEquals(Base64Encoder.encode("Man"), Base64.getEncoder().encodeToString("Man".getBytes()));
-        assertEquals(Base64Encoder.encode("Ma"), Base64.getEncoder().encodeToString("Ma".getBytes()));
-        assertEquals(Base64Encoder.encode("M"), Base64.getEncoder().encodeToString("M".getBytes()));
+        assertEquals(Base64Encoder.encode("Api"), Base64.getEncoder().encodeToString("Api".getBytes()));
+        assertEquals(Base64Encoder.encode("Ap"), Base64.getEncoder().encodeToString("Ap".getBytes()));
+        assertEquals(Base64Encoder.encode("A"), Base64.getEncoder().encodeToString("A".getBytes()));
 
         String s = UUID.randomUUID().toString();
         assertEquals(Base64Encoder.encode(s), Base64.getEncoder().encodeToString(s.getBytes()));
