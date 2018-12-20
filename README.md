@@ -1,4 +1,4 @@
-# base64-encoder
+# base64-encoder [![Build Status](https://travis-ci.org/kylecorry31/base64-encoder.svg?branch=master)](https://travis-ci.org/kylecorry31/base64-encoder)
 A base64 encoder Java library designed to work on Android devices without support for the Base64 class.
 
 ## Contributing
