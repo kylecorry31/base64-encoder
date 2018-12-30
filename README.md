@@ -18,16 +18,16 @@ byte[] bytes = "A test string".getBytes();
 String encoded = Base64Encoder.encode(bytes); // QSB0ZXN0IHN0cmluZw==
 ```
 
-All commands presented below work in Mac or Linux, for Windows replace `.\gradlew` with `gradlew.bat`.
+All commands presented below work in Mac or Linux, for Windows replace `./gradlew` with `gradlew.bat`.
 
 ### Build
 To build the project, run the `./gradlew build` command.
 
 ### Jar
-To create a jar file which can be imported into other projects, run the `.\gradlew jar` command.
+To create a jar file which can be imported into other projects, run the `./gradlew jar` command.
 
 ### Test
-This library can be tested against the Java 8 Base64 class by executing the `.\gradlew test` command.
+This library can be tested against the Java 8 Base64 class by executing the `./gradlew test` command.
 
 ## Contributing
 Please fork this repo and submit a pull request to contribute. I will review all changes and respond if they are accepted or rejected (as well as reasons, so it will be accepted).
