@@ -34,5 +34,13 @@ public class Base64EncoderTest {
         assertEquals(0x00876500, Base64Encoder.packBytesIntoInt(0x00, 0x87, 0x65));
     }
 
+    @Test
+    public void testByteToUnsignedInt(){
+
+        byte i = (byte) ((int) 234);
+        assertEquals(234, Base64Encoder.byteToUnsignedInt(i));
+        assertEquals(255, Base64Encoder.byteToUnsignedInt((byte) 255));
+    }
+
 
 }

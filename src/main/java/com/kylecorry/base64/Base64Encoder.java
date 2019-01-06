@@ -25,14 +25,14 @@ public class Base64Encoder {
             byte b2 = i+1 < bytes.length ? bytes[i+1] : 0;
             byte b3 = i+2 < bytes.length ? bytes[i+2] : 0;
 
-            int current = packBytesIntoInt(Byte.toUnsignedInt(b1), Byte.toUnsignedInt(b2), Byte.toUnsignedInt(b3));
-            s.append(lookup(Byte.toUnsignedInt(read6Bits(0, current))));
-            s.append(lookup(Byte.toUnsignedInt(read6Bits(1, current))));
+            int current = packBytesIntoInt(byteToUnsignedInt(b1), byteToUnsignedInt(b2), byteToUnsignedInt(b3));
+            s.append(lookup(byteToUnsignedInt(read6Bits(0, current))));
+            s.append(lookup(byteToUnsignedInt(read6Bits(1, current))));
             if (i + 1 < bytes.length) {
-                s.append(lookup(Byte.toUnsignedInt(read6Bits(2, current))));
+                s.append(lookup(byteToUnsignedInt(read6Bits(2, current))));
             }
             if (i + 2 < bytes.length){
-                s.append(lookup(Byte.toUnsignedInt(read6Bits(3, current))));
+                s.append(lookup(byteToUnsignedInt(read6Bits(3, current))));
             }
         }
 
@@ -44,6 +44,15 @@ public class Base64Encoder {
         }
 
         return s.toString();
+    }
+
+    /**
+     * Convert a byte to an unsigned int.
+     * @param b The byte to convert.
+     * @return The unsigned int version of the byte.
+     */
+    static int byteToUnsignedInt(byte b){
+        return ((int) b) & 0xFF;
     }
 
     /**
