@@ -1,5 +1,8 @@
 package com.kylecorry.base64;
 
+/**
+ * A base 64 encoder
+ */
 public class Base64Encoder {
 
     /**
@@ -20,20 +23,10 @@ public class Base64Encoder {
 
         StringBuilder s = new StringBuilder();
 
-        for (int i = 0; i < bytes.length; i+=3) {
-            byte b1 = bytes[i];
-            byte b2 = i+1 < bytes.length ? bytes[i+1] : 0;
-            byte b3 = i+2 < bytes.length ? bytes[i+2] : 0;
+        int num6Bits = (int) Math.ceil(bytes.length * Byte.SIZE / 6.0);
 
-            int current = packBytesIntoInt(byteToUnsignedInt(b1), byteToUnsignedInt(b2), byteToUnsignedInt(b3));
-            s.append(lookup(byteToUnsignedInt(read6Bits(0, current))));
-            s.append(lookup(byteToUnsignedInt(read6Bits(1, current))));
-            if (i + 1 < bytes.length) {
-                s.append(lookup(byteToUnsignedInt(read6Bits(2, current))));
-            }
-            if (i + 2 < bytes.length){
-                s.append(lookup(byteToUnsignedInt(read6Bits(3, current))));
-            }
+        for (int i = 0; i < num6Bits; i++) {
+            s.append(lookup(read6Bits(i, bytes)));
         }
 
         int eqsNeeded = (bytes.length % 3);
@@ -47,40 +40,38 @@ public class Base64Encoder {
     }
 
     /**
-     * Convert a byte to an unsigned int.
-     * @param b The byte to convert.
-     * @return The unsigned int version of the byte.
+     * Read 6 bits from a byte array
+     * @param index The 6-bit index to read bits from
+     * @param bytes The bytes to get the 6 bits from
+     * @return The 6 bits from the values int, left padded with zeros.
+     * @throws IndexOutOfBoundsException if the index is out of bounds
      */
-    static int byteToUnsignedInt(byte b){
-        return ((int) b) & 0xFF;
-    }
-
-    /**
-     * Pack 3 bytes into an integer, from left to right.
-     *  Byte 1  Byte 2  Byte 3  Zeros
-     * 11111111222222223333333300000000
-     * @param byte1 The left most byte
-     * @param byte2 The middle byte
-     * @param byte3 The right most byte
-     * @return An integer containing all three bytes and right padded with zeros.
-     */
-    static int packBytesIntoInt(int byte1, int byte2, int byte3){
-        return ((byte1 << 24) + (byte2 << 16) + (byte3 << 8));
-    }
-
-    /**
-     * Read 6 bits from an integer.
-     * @param index The index to read bits from [0, 1, 2, 3].
-     * @param values The integer to get bits from.
-     * @return The 6 bits from the values int, left padded with 2 zeros.
-     */
-    static byte read6Bits(int index, int values){
-        if (index >= 4 || index < 0){
-            return 0;
+    static byte read6Bits(int index, byte[] bytes){
+        int numBits = bytes.length * Byte.SIZE;
+        int maxIndex = (int) Math.ceil(numBits / 6.0);
+        if (index < 0 || index >= maxIndex){
+            throw new IndexOutOfBoundsException();
         }
-        int i = index * 6;
-        int mask = 0b111111 << (26 - i);
-        return (byte) ((values & mask) >> (26 - i) & 0b00111111);
+
+        final int bit6mask = 0b00111111;
+
+        int startingBit = index * 6;
+        int startingByteIndex = startingBit / Byte.SIZE;
+        int startingOffset = startingBit % Byte.SIZE;
+
+        int startingMask = 0b11111100 >> startingOffset;
+
+        int bits = (bytes[startingByteIndex] & startingMask) << startingOffset >> (Byte.SIZE - 6);
+        int endingBit = (index + 1) * 6;
+        int endingByteIndex = endingBit / Byte.SIZE;
+        if (endingByteIndex != startingByteIndex && endingByteIndex < bytes.length) {
+            int endingOffset = Byte.SIZE - endingBit % Byte.SIZE;
+            int endingMask = bit6mask << endingOffset;
+            int endingBits = (bytes[endingByteIndex] & endingMask);
+            bits |= endingBits >> endingOffset;
+        }
+
+        return (byte) (bits & bit6mask);
     }
 
     /**
